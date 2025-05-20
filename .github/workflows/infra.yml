@@ -18,7 +18,8 @@ jobs:
   Build:
     name: 'Building app'
     runs-on: ubuntu-latest
-
+    outputs:
+      image_tag: ${{ steps.set_tag.outputs.image_tag }}
     defaults:
       run:
         shell: bash
@@ -30,10 +31,29 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set TAG_APP with SHA
+        run: |
+          echo "TAG_APP=v${{ env.APP_VERSION }}-$(echo $GITHUB_SHA | cut -c1-7)" >> "$GITHUB_ENV"
+
+      - name: Set TAG_APP Output
+        id: set_tag
+        run: echo "image_tag=$TAG_APP" >> $GITHUB_OUTPUT
+
+      - name: Show image TAG
+        run: |
+          echo "Image TAG" $TAG_APP
+          echo "Image TAG" ${{ steps.set_tag.outputs.image_tag }}
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+
+      - name: Install Requirements
+        run:  pip install flask
+
+      - name: Unit Test
+        run: python -m unittest -v test
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
