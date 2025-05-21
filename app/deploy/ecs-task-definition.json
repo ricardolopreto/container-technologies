@@ -40,6 +40,7 @@
                 "startPeriod": 20
             }
         }
+        
     ],
     "family": "ci-cd-app",
     "taskRoleArn": "arn:aws:iam::893298020274:role/LabRole",
