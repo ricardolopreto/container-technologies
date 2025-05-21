@@ -107,7 +107,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Fill in the new image ID in the Amazon ECS task definition
-        id: task-def
+        
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ./app/deploy/ecs-task-definition.json
